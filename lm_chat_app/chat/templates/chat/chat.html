@@ -1,0 +1,46 @@
+<!-- templates/chat/chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Interface</title>
+    <!-- Add CSS or stylesheets for UI/UX -->
+</head>
+<body>
+    <h1>Chat Interface</h1>
+
+    <form id="chat-form" method="post" action="{% url 'chat_view' %}">
+        {% csrf_token %}
+        <label for="message">Your message:</label><br>
+        <input type="text" id="message" name="message"><br><br>
+
+        <label for="model">Select model:</label>
+        <select id="model" name="model">
+            <option value="gpt2">GPT-2</option>
+            <option value="distilgpt2">DistilGPT-2</option>
+            <!-- Add more models as options -->
+        </select><br><br>
+
+        <button type="submit">Send</button>
+    </form>
+
+    <!-- Display chat history -->
+    <h2>Chat History:</h2>
+    <div id="chat-history">
+        {% for conversation in conversations %}
+            <p><strong>{{ conversation.timestamp|date:"DATETIME_FORMAT" }}</strong></p>
+            {% for message in conversation.message_set.all %}
+                {% if message.is_user %}
+                    <p><strong>User:</strong> {{ message.text }}</p>
+                {% else %}
+                    <p><strong>Bot:</strong> {{ message.text }}</p>
+                {% endif %}
+            {% endfor %}
+        {% empty %}
+            <p>No chat history available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Add JavaScript for dynamic UI interactions -->
+</body>
+</html>
